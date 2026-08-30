@@ -54,6 +54,14 @@
   --color-trust-border: color-mix(in oklab, oklch(100% 0 0) 40%, transparent); /* rgba(255,255,255,0.4) */
   --color-trust-text: oklch(0.82 0.01 0); /* #c4c2c3 */
 
+  /* Contact — transmission console (amber signal on black chassis) */
+  --color-signal: oklch(0.86 0.16 84); /* #FFB020 amber — lab signal, not acid green */
+  --color-signal-soft: oklch(0.86 0.16 84 / 0.14);
+  --color-chassis: oklch(0.17 0.005 285); /* #1a1c1e */
+  --color-chassis-border: color-mix(in oklab, oklch(100% 0 0) 9%, transparent);
+  --color-field-line: oklch(100% 0 0 / 0.08);
+  --color-field-line-active: oklch(0.86 0.16 84 / 0.65);
+
   /* ── Radius Tokens ── */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
@@ -79,6 +87,8 @@
   --animate-overlay-in: overlayIn 0.28s ease both;
   --animate-menu-in: menuIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-link-in: linkIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-signal-pulse: signalPulse 2.2s ease-in-out infinite;
+  --animate-ticker: ticker 22s linear infinite;
 
   @keyframes slideDown {
     from {
@@ -153,6 +163,16 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes signalPulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 oklch(0.86 0.16 84 / 0.45); }
+    50% { opacity: 0.85; transform: scale(0.98); box-shadow: 0 0 0 6px oklch(0.86 0.16 84 / 0); }
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 }
 
