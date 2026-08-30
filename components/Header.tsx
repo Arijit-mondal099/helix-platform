@@ -8,7 +8,7 @@ type NavItem = { label: string; href: string; active?: boolean };
 const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "#top", active: true },
   { label: "Product", href: "#products" },
-  { label: "Case Studies", href: "#" },
+  { label: "Case Studies", href: "#case-studies" },
   { label: "Contact", href: "#" },
 ];
 
