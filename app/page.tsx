@@ -1,3 +1,4 @@
+import CaseStudies from "@/components/CaseStudies";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Products from "@/components/Products";
@@ -36,6 +37,7 @@ export default function Home() {
       </section>
 
       <Products />
+      <CaseStudies />
     </main>
   );
 }
