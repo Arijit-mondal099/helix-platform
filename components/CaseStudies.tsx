@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type CaseStudy = {
   company: string;
+  slug: string;
   industry: string;
   icon: string;
   metric: string;
@@ -18,10 +19,11 @@ type CaseStudy = {
 const CASE_STUDIES: CaseStudy[] = [
   {
     company: "Atlas Pay",
+    slug: "atlas-pay",
     industry: "Fintech — Settlement",
     icon: "fa-landmark",
-    metric: "62%",
-    metricLabel: "FASTER RECONCILIATION",
+    metric: "11 min",
+    metricLabel: "RECONCILIATION — FROM 3 HOURS",
     quote:
       "Reason cut our reconciliation from 3 hours to 11 minutes — grounded in our ledger, not a demo dataset. Auditors stopped asking how, started asking when we ship next.",
     author: "S. Marín",
@@ -31,6 +33,7 @@ const CASE_STUDIES: CaseStudy[] = [
   },
   {
     company: "Nereus Health",
+    slug: "nereus-health",
     industry: "Healthcare — Longitudinal Memory",
     icon: "fa-heart-pulse",
     metric: "2.4M",
@@ -44,6 +47,7 @@ const CASE_STUDIES: CaseStudy[] = [
   },
   {
     company: "Kinetic Freight",
+    slug: "kinetic-freight",
     industry: "Logistics — Orchestration",
     icon: "fa-truck-fast",
     metric: "24/7",
@@ -61,6 +65,10 @@ function useInView<T extends HTMLElement>(threshold = 0.18) {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
@@ -129,7 +137,7 @@ export default function CaseStudies() {
             </span>
             <span className="h-px flex-1 bg-[#0A0A0A]/15" aria-hidden="true" />
             <span className="font-geist-pixel hidden shrink-0 text-[10px] tracking-[0.16em] text-[#0A0A0A]/40 sm:inline">
-              VOL. 2024 · PROD VERIFIED
+              VOL. 2024 · ARCHIVE
             </span>
             <span className="font-geist-pixel shrink-0 rounded-full border border-[#0A0A0A]/10 bg-white px-2.5 py-1 text-[10px] tracking-[0.12em] text-[#0A0A0A]/70">
               3 DOSSIERS
@@ -173,10 +181,10 @@ export default function CaseStudies() {
               }`}
               style={{ transitionDelay: "0.34s" } as React.CSSProperties}
             >
-              Three teams who shipped Helix to real users. Each dossier is a
-              verbatim field report — with the receipts stamped.
+              Three teams exploring Helix in production pilots. Each dossier is an
+              illustrative field note — demo preview.
               <a
-                href="#"
+                href="/case-studies"
                 className="mt-3 inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold tracking-[-0.01em] text-[#0A0A0A] underline decoration-[#0A0A0A]/20 underline-offset-4 hover:decoration-[#0A0A0A]/40"
               >
                 View all reports <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" />
@@ -199,7 +207,7 @@ export default function CaseStudies() {
               {featuredStudy.fileNo}
             </span>
             <span className="font-geist-pixel text-[9px] tracking-[0.12em] text-[#0A0A0A]/35">
-              — {featuredStudy.year} · CONFIDENTIAL
+              — {featuredStudy.year} · ARCHIVE
             </span>
           </div>
 
@@ -224,7 +232,7 @@ export default function CaseStudies() {
                   aria-hidden="true"
                   className="pointer-events-none absolute right-4 top-4 rotate-[8deg] rounded-[8px] border-[1.5px] border-[#C43A2A] bg-white px-2.5 py-1 font-geist-pixel text-[10px] tracking-[0.14em] text-[#C43A2A] shadow-[0_1px_6px_rgba(196,58,42,0.15)] sm:right-6 sm:top-6"
                 >
-                  VERIFIED · PROD
+                  ILLUSTRATIVE · PREVIEW
                 </span>
 
                 <div>
@@ -281,7 +289,7 @@ export default function CaseStudies() {
                 />
                 <div className="relative">
                   <span className="font-geist-pixel text-[10px] tracking-[0.18em] text-[#0A0A0A]/35">
-                    FIELD REPORT — VERBATIM
+                    FIELD REPORT — ILLUSTRATIVE
                   </span>
                   <blockquote className="mt-3 font-sans text-[15.5px] font-[450] leading-[1.55] tracking-[-0.015em] text-[#0A0A0A]">
                     &ldquo;{featuredStudy.quote}&rdquo;
@@ -306,23 +314,23 @@ export default function CaseStudies() {
 
                   <div className="mt-6 flex flex-wrap items-center gap-3">
                     <a
-                      href="#"
+                      href={`/case-studies/${featuredStudy.slug}`}
                       className="inline-flex items-center gap-2 rounded-full bg-[#0A0A0A] px-5 py-[10px] font-sans text-[13px] font-semibold tracking-[-0.01em] text-white transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     >
                       Read dossier
                       <i className="fa-solid fa-arrow-right text-[11px] opacity-80" aria-hidden="true" />
                     </a>
                     <span className="font-geist-pixel text-[10px] tracking-[0.12em] text-[#0A0A0A]/35">
-                      PDF · 2.4 MB · REDACTED
+                      PDF · 2.4 MB · DEMO
                     </span>
                   </div>
 
-                  {/* handwritten annotation — quiet risk, not decoration */}
+                  {/* handwritten annotation — illustrative, not a verified claim */}
                   <span
                     aria-hidden="true"
                     className="pointer-events-none absolute -right-2 bottom-[62px] hidden rotate-[-2deg] font-sans text-[11px] italic tracking-[-0.01em] text-[#C43A2A]/70 lg:block"
                   >
-                    ↳ audit passed first try
+                    ↳ illustrative annotation
                   </span>
                 </div>
               </div>
@@ -395,7 +403,7 @@ export default function CaseStudies() {
                       aria-hidden="true"
                       className="rotate-[6deg] rounded-[6px] border border-[#C43A2A]/70 px-1.5 py-0.5 font-geist-pixel text-[8px] tracking-[0.12em] text-[#C43A2A]"
                     >
-                      VERIFIED
+                      ARCHIVE
                     </span>
                   </div>
                   <p className="font-geist-pixel relative mt-1 text-[9px] tracking-[0.16em] text-[#0A0A0A]/50">
@@ -421,7 +429,7 @@ export default function CaseStudies() {
                   </div>
 
                   <a
-                    href="#"
+                    href={`/case-studies/${c.slug}`}
                     className="relative mt-5 inline-flex w-fit items-center gap-1.5 border-b border-[#0A0A0A]/15 pb-1 font-sans text-[12.5px] font-semibold tracking-[-0.01em] text-[#0A0A0A] transition-colors hover:border-[#0A0A0A]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Read dossier <i className="fa-solid fa-arrow-right text-[10px] translate-y-px opacity-60" aria-hidden="true" />
@@ -436,7 +444,7 @@ export default function CaseStudies() {
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[#0A0A0A]/10 pt-4">
           <span className="font-geist-pixel text-[10px] tracking-[0.14em] text-[#0A0A0A]/40">
             ARCHIVE REF: HELIX-FIELD-2024 · 3 OF 3 DOSSIERS SHOWN ·{" "}
-            <a href="#" className="underline decoration-[#0A0A0A]/20 underline-offset-4 hover:decoration-[#0A0A0A]/40">
+            <a href="/case-studies" className="underline decoration-[#0A0A0A]/20 underline-offset-4 hover:decoration-[#0A0A0A]/40">
               Request full archive
             </a>
           </span>
