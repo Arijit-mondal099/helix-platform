@@ -75,21 +75,8 @@ export default function Products() {
     <section
       id="products"
       aria-labelledby="products-heading"
-      className="relative bg-black px-[clamp(14px,3vw,32px)] pb-[clamp(32px,6vw,72px)] pt-[clamp(40px,7vw,88px)]"
+      className="relative px-[clamp(14px,3vw,32px)] pb-[clamp(32px,6vw,72px)] pt-[clamp(40px,7vw,88px)]"
     >
-      {/* hairline rule — encodes that this is a system break, not decoration */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-      {/* faint grid texture — the aesthetic risk: instrument paper, not SaaS */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
