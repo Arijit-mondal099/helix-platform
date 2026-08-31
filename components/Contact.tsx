@@ -84,7 +84,7 @@ export default function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative overflow-hidden bg-black px-[clamp(14px,3vw,32px)] pb-[clamp(40px,6vw,64px)] pt-[clamp(40px,6vw,72px)]"
+      className="relative overflow-hidden bg-black px-[clamp(14px,3vw,32px)] pb-[clamp(132px,14vw,200px)] pt-[clamp(40px,6vw,72px)]"
     >
       {/* quiet transition from paper — single hairline, no gradient stack */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/10" aria-hidden="true" />
