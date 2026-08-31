@@ -383,18 +383,6 @@ export default function Contact() {
             </div>
           </div>
         </div>
-
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4">
-          <span className="font-geist-pixel text-[10px] tracking-[0.12em] text-white/30">
-            HELIX — INTELLIGENCE DESIGNED TO EVOLVE · SF · LDN · REMOTE
-          </span>
-          <a
-            href="#top"
-            className="font-geist-pixel inline-flex items-center gap-2 text-[10px] tracking-[0.14em] text-white/40 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >
-            <i className="fa-solid fa-arrow-up text-[9px]" aria-hidden="true" /> BACK TO TOP
-          </a>
-        </div>
       </div>
     </section>
   );
