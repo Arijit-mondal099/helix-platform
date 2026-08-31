@@ -29,11 +29,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/45" />
         </div>
         <Header />
-        {/* spacer — reserves header height in flow since header is now fixed */}
-        <div
-          aria-hidden="true"
-          className="z-[1] h-[clamp(44px,5.2vw,48px)] w-full max-w-[720px] shrink-0 max-[720px]:h-12"
-        />
         <Hero />
         <Stats />
       </section>
