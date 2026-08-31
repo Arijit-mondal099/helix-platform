@@ -14,10 +14,30 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
 
   const toggle = () => setOpen((v) => !v);
   const close = () => setOpen(false);
+
+  // Morph: scrollY > 10 → pill, reversible, deep-link safe, rAF throttled
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      setScrolled(window.scrollY > 10);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    // init — handles deep-link without flash (first frame correction)
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -56,13 +76,23 @@ export default function Header() {
 
   return (
     <>
-      {/* Header — fixed at top, retains original slide-down and stays visible on scroll */}
-      <header className="fixed left-1/2 top-[clamp(16px,2.4vh,28px)] z-20 flex w-[calc(100%-clamp(28px,6vw,64px))] max-w-[720px] -translate-x-1/2 items-center justify-center gap-[clamp(18px,2.8vw,28px)] animate-slide-down max-[720px]:max-w-[calc(100%-clamp(28px,6vw,64px))] max-[720px]:justify-between">
-        {/* Logo */}
+      {/* Header — morphs between transparent top and centered pill on scroll */}
+      <header
+        className={`fixed left-1/2 top-[clamp(16px,2.4vh,28px)] z-20 flex w-[calc(100%-clamp(28px,6vw,64px))] -translate-x-1/2 items-center animate-slide-down transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          scrolled
+            ? "max-w-[720px] justify-center gap-[clamp(18px,2.8vw,28px)] max-[720px]:max-w-[calc(100%-clamp(28px,6vw,64px))] max-[720px]:justify-between"
+            : "max-w-[1100px] justify-between gap-6 max-[720px]:max-w-[calc(100%-clamp(28px,6vw,64px))] max-[720px]:justify-between"
+        }`}
+      >
+        {/* Logo — size/radius/bg animate, same asset */}
         <a
           href="#"
           aria-label="Home"
-          className="grid size-[clamp(40px,4.4vw,46px)] shrink-0 place-items-center rounded-full bg-white shadow-nav transition-transform duration-200 hover:scale-[1.04] max-[720px]:size-12"
+          className={`grid shrink-0 place-items-center rounded-full transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] ${
+            scrolled
+              ? "size-[46px] bg-white shadow-nav max-[720px]:size-12"
+              : "size-[40px] bg-white shadow-nav max-[720px]:size-12"
+          }`}
         >
           <Image
             src="/logo.webp"
@@ -74,20 +104,22 @@ export default function Header() {
           />
         </a>
 
-        {/* Desktop nav pill - Tailwind replacement for .nav */}
+        {/* Desktop nav — transparent top vs white pill scrolled */}
         <nav
           aria-label="Primary navigation"
-          className="flex h-[clamp(44px,5.2vw,48px)] max-w-[430px] flex-1 items-center gap-0.5 rounded-full bg-white p-1 px-2 shadow-nav max-[720px]:hidden"
+          className={`flex h-[clamp(44px,5.2vw,48px)] max-w-[430px] flex-1 items-center gap-0.5 rounded-full p-1 px-2 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[720px]:hidden ${
+            scrolled ? "bg-white shadow-nav" : "bg-transparent shadow-none"
+          }`}
         >
           {NAV_ITEMS.map((item) => (
             <a
               key={item.label}
               href={item.href}
               aria-current={item.active ? "page" : undefined}
-              className={`relative inline-flex h-full flex-1 items-center justify-center whitespace-nowrap rounded-full px-2.5 font-sans text-[clamp(13px,1.4vw,15px)] font-medium tracking-[-0.01em] text-nav-text transition-opacity duration-200 ${
+              className={`relative inline-flex h-full flex-1 items-center justify-center whitespace-nowrap rounded-full px-2.5 font-sans text-[clamp(13px,1.4vw,15px)] font-medium tracking-[-0.01em] transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 item.active
-                  ? "opacity-100 after:absolute after:bottom-[5px] after:left-1/2 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-black after:shadow-[-5px_0_0_#000,5px_0_0_#000] after:content-['']"
-                  : "opacity-50 hover:opacity-75"
+                  ? "text-black opacity-100 after:absolute after:bottom-[5px] after:left-1/2 after:size-[3px] after:-translate-x-1/2 after:rounded-full after:bg-black after:shadow-[-5px_0_0_#000,5px_0_0_#000] after:content-['']"
+                  : "text-black opacity-60 hover:opacity-100"
               }`}
             >
               {item.label}
@@ -95,15 +127,19 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Sign in desktop - Tailwind replacement for .sign-in */}
+        {/* Sign in desktop — white/black top vs dark/light scrolled */}
         <a
           href="#"
-          className="hidden h-[clamp(44px,5.2vw,48px)] shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-pill-dark px-[22px] font-sans text-[clamp(13px,1.4vw,15px)] font-medium tracking-[-0.01em] text-sign-in-text shadow-nav transition-all duration-200 hover:-translate-y-px hover:bg-[#323234] hover:text-white max-[720px]:hidden min-[721px]:inline-flex"
+          className={`hidden h-[clamp(44px,5.2vw,48px)] shrink-0 items-center justify-center whitespace-nowrap rounded-full px-[22px] font-sans text-[clamp(13px,1.4vw,15px)] font-medium tracking-[-0.01em] shadow-nav transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px max-[720px]:hidden min-[721px]:inline-flex ${
+            scrolled
+              ? "bg-pill-dark text-sign-in-text hover:bg-[#323234] hover:text-white"
+              : "bg-white text-black hover:bg-white/90"
+          }`}
         >
           Sign in
         </a>
 
-        {/* Burger - Tailwind replacement for .burger + .burger-bar */}
+        {/* Burger — bg-white/20+white icon top vs bg-white+dark icon scrolled */}
         <button
           ref={burgerRef}
           type="button"
@@ -111,11 +147,25 @@ export default function Header() {
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={toggle}
-          className="group hidden size-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-[5px] rounded-full border-0 bg-pill-dark shadow-nav transition-all duration-200 aria-expanded:bg-white max-[720px]:inline-flex"
+          className={`group hidden size-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-[5px] rounded-full border-0 shadow-nav transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] aria-expanded:bg-white max-[720px]:inline-flex ${
+            scrolled ? "bg-white" : "bg-white/20 backdrop-blur-md"
+          }`}
         >
-          <span className="block h-[1.5px] w-[18px] origin-center rounded-full bg-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:translate-y-[6.5px] group-aria-expanded:rotate-45 group-aria-expanded:bg-black" />
-          <span className="block h-[1.5px] w-[18px] origin-center rounded-full bg-white transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:scale-x-0 group-aria-expanded:opacity-0 group-aria-expanded:bg-black" />
-          <span className="block h-[1.5px] w-[18px] origin-center rounded-full bg-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:-translate-y-[6.5px] group-aria-expanded:-rotate-45 group-aria-expanded:bg-black" />
+          <span
+            className={`block h-[1.5px] w-[18px] origin-center rounded-full transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:translate-y-[6.5px] group-aria-expanded:rotate-45 group-aria-expanded:bg-black ${
+              scrolled ? "bg-black" : "bg-white group-aria-expanded:bg-black"
+            }`}
+          />
+          <span
+            className={`block h-[1.5px] w-[18px] origin-center rounded-full transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:scale-x-0 group-aria-expanded:opacity-0 group-aria-expanded:bg-black ${
+              scrolled ? "bg-black" : "bg-white group-aria-expanded:bg-black"
+            }`}
+          />
+          <span
+            className={`block h-[1.5px] w-[18px] origin-center rounded-full transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-aria-expanded:-translate-y-[6.5px] group-aria-expanded:-rotate-45 group-aria-expanded:bg-black ${
+              scrolled ? "bg-black" : "bg-white group-aria-expanded:bg-black"
+            }`}
+          />
         </button>
       </header>
 
